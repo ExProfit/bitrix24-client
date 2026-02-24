@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 from .base import BaseBitrixModel
 from pydantic import Field
 
@@ -16,9 +16,9 @@ class ChatUser(BaseBitrixModel):
     name: str
     bot: bool
     active: bool
-    first_name: str = Field(alias="firstName")
-    last_name: str = Field(alias="lastName")
-    external_auth_id: str = Field(alias="externalAuthId")
+    first_name: Optional[str] = Field(None, alias="firstName")
+    last_name: Optional[str] = Field(None, alias="lastName")
+    external_auth_id: Optional[str] = Field(None, alias="externalAuthId")
     extranet: bool
 
     @property
