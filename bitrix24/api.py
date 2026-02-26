@@ -111,6 +111,9 @@ class BitrixAPI:
             return DealListResponse.model_validate(response)
         return response
     
+    # ==================== ЛИДЫ ====================
+
+    
     # ==================== КОНТАКТЫ ====================
 
     def get_contact(self, contact_id, parse_response: bool = True):
@@ -222,3 +225,67 @@ class BitrixAPI:
         if parse_response:
             return ChatHistoryResponse.model_validate(response)
         return response
+    
+    # ==================== УНИВЕРСАЛЬНЫЕ МЕТОДЫ ====================
+
+    def get_crm_item(self, entity_type: str, item_id: int, select: Optional[list] = None, parse_response: bool = False):
+
+        method = 'crm.item.get'
+        params = {
+            'entityTypeId': self._get_entity_type_id(entity_type),
+            'id': item_id
+        }
+        if select:
+            params['select'] = select
+
+        params['custom_fields_format'] = 'ORIGINAL'
+
+        return self._request(method, params)
+
+
+    def get_crm_item_list(self, entity_type: str, filter_params: Optional[dict] = None,
+                      select: Optional[list] = None, order: Optional[dict] = None,
+                      start: Optional[int] = 0, limit: Optional[int] = 50,
+                      parse_response: bool = False):
+        
+        method = 'crm.item.list'
+        params = {
+            'entityTypeId': self._get_entity_type_id(entity_type)
+        }
+        if filter_params:
+            params['filter'] = filter_params
+        if select:
+            params['select'] = select
+        if order:
+            params['order'] = order
+        if start is not None:
+            params['start'] = start
+        if limit:
+            params['limit'] = limit
+
+        params['custom_fields_format'] = 'ORIGINAL'
+
+        return self._request(method, params)
+    
+    def _get_entity_type_id(self, entity_type: str) -> int:
+        """Преобразует строковый тип сущности в числовой ID."""
+        mapping = {
+            'lead': 1,
+            'deal': 2,
+            'contact': 3,
+            'company': 4,
+        }
+
+        if entity_type.startswith('custom_'):
+            # Предполагаем, что после 'custom_' идет числовой ID кастомной сущности
+            try:
+                return int(entity_type.split('_', 1)[1])
+            except (ValueError, IndexError):
+                raise ValueError(f"Invalid custom entity type format: {entity_type}. Expected 'custom_<number>'.")
+
+        entity_id = mapping.get(entity_type.lower())
+
+        if entity_id is None:
+            raise ValueError(f"Unknown entity type: {entity_type}")
+        
+        return entity_id
