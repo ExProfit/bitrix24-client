@@ -238,7 +238,7 @@ class BitrixAPI:
         if select:
             params['select'] = select
 
-        params['custom_fields_format'] = 'ORIGINAL'
+        params['useOriginalUfNames'] = 'Y'
 
         return self._request(method, params)
 
@@ -263,7 +263,7 @@ class BitrixAPI:
         if limit:
             params['limit'] = limit
 
-        params['custom_fields_format'] = 'ORIGINAL'
+        params['useOriginalUfNames'] = 'Y'
 
         return self._request(method, params)
     
