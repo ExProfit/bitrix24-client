@@ -29,6 +29,7 @@ class BitrixAPI:
         try:
             response = self.session.post(url, json=params)
             logger.debug(f"← Bitrix API: {method} | {response.status_code} | {response.text[:200]}")
+            logger.debug(response.request)
 
             # Проверяем HTTP статус
             response.raise_for_status()
