@@ -251,10 +251,10 @@ class BitrixAPI:
             parse_response: bool = False):
         
         method = 'crm.item.list'
-        params = {
-            'entityTypeId': self._get_entity_type_id(entity_type)
-        }
+        if params is None:
+            params = {}
 
+        params['entityTypeId'] = self._get_entity_type_id(entity_type)
         params['useOriginalUfNames'] = 'Y'
     
         if start is not None:
