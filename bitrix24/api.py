@@ -29,7 +29,16 @@ class BitrixAPI:
         try:
             response = self.session.post(url, json=params)
             logger.debug(f"← Bitrix API: {method} | {response.status_code} | {response.text[:200]}")
-            logger.debug(response.request)
+            
+            # Полный дамп запроса и ответа
+            logger.debug("=== FULL REQUEST/RESPONSE DUMP ===")
+            logger.debug(f"REQUEST: {response.request.method} {response.request.url}")
+            logger.debug(f"REQUEST HEADERS: {response.request.headers}")
+            logger.debug(f"REQUEST BODY: {response.request.body}")
+            logger.debug(f"RESPONSE STATUS: {response.status_code}")
+            logger.debug(f"RESPONSE HEADERS: {response.headers}")
+            logger.debug(f"RESPONSE TEXT: {response.text}")
+            logger.debug("==================================")
 
             # Проверяем HTTP статус
             response.raise_for_status()
