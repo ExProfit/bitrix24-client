@@ -243,25 +243,22 @@ class BitrixAPI:
         return self._request(method, params)
 
 
-    def get_crm_item_list(self, entity_type: str, filter_params: Optional[dict] = None,
-                      select: Optional[list] = None, order: Optional[dict] = None,
-                      start: Optional[int] = 0,
-                      parse_response: bool = False):
+    def get_crm_item_list(
+            self,
+            entity_type: str,
+            params: dict = None,
+            start: Optional[int] = 0,
+            parse_response: bool = False):
         
         method = 'crm.item.list'
         params = {
             'entityTypeId': self._get_entity_type_id(entity_type)
         }
-        if filter_params:
-            params['filter'] = filter_params
-        if select:
-            params['select'] = select
-        if order:
-            params['order'] = order
-        if start is not None:
-            params['start'] = start
 
         params['useOriginalUfNames'] = 'Y'
+    
+        if start is not None:
+            params['start'] = start
 
         return self._request(method, params)
     
