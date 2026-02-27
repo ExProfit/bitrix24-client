@@ -245,7 +245,7 @@ class BitrixAPI:
 
     def get_crm_item_list(self, entity_type: str, filter_params: Optional[dict] = None,
                       select: Optional[list] = None, order: Optional[dict] = None,
-                      start: Optional[int] = 0, limit: Optional[int] = 50,
+                      start: Optional[int] = 0,
                       parse_response: bool = False):
         
         method = 'crm.item.list'
@@ -260,8 +260,6 @@ class BitrixAPI:
             params['order'] = order
         if start is not None:
             params['start'] = start
-        if limit:
-            params['limit'] = limit
 
         params['useOriginalUfNames'] = 'Y'
 
