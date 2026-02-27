@@ -30,15 +30,24 @@ class BitrixAPI:
             response = self.session.post(url, json=params)
             logger.debug(f"← Bitrix API: {method} | {response.status_code} | {response.text[:200]}")
             
-            # Полный дамп запроса и ответа
-            logger.debug("=== FULL REQUEST/RESPONSE DUMP ===")
-            logger.debug(f"REQUEST: {response.request.method} {response.request.url}")
-            logger.debug(f"REQUEST HEADERS: {response.request.headers}")
-            logger.debug(f"REQUEST BODY: {response.request.body}")
-            logger.debug(f"RESPONSE STATUS: {response.status_code}")
-            logger.debug(f"RESPONSE HEADERS: {response.headers}")
-            logger.debug(f"RESPONSE TEXT: {response.text}")
-            logger.debug("==================================")
+            # Безопасная отладка запроса
+            logger.debug(f"→ Bitrix API: {method}")
+            logger.debug(f"→ URL: {url}")
+            logger.debug(f"→ Headers: {dict(response.request.headers)}")
+
+            # Получаем тело запроса разными способами
+            if hasattr(response.request, 'body'):
+                logger.debug(f"→ Body: {response.request.body}")
+            elif hasattr(response.request, 'data'):
+                logger.debug(f"→ Body (data): {response.request.data}")
+            else:
+                # Если нет прямого доступа, логируем то, что отправляли
+                logger.debug(f"→ Params sent: {json.dumps(params, indent=2, ensure_ascii=False)}")
+
+            # Ответ
+            logger.debug(f"← Status: {response.status_code}")
+            logger.debug(f"← Headers: {dict(response.headers)}")
+            logger.debug(f"← Body: {response.text[:500]}")
 
             # Проверяем HTTP статус
             response.raise_for_status()
